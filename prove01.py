@@ -1,1 +1,1 @@
-../wk01/prove01.py
+/home/mchapman/school/wi18/machine/wk01/prove01.py
