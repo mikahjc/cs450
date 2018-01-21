@@ -152,6 +152,16 @@ def main():
         data = dataset.data
         target = dataset.target
 
+    if '-n' in myargs:
+        neighbors = int(myargs['-n'])
+    elif '--neighbors' in myargs:
+        neighbors = int(myargs['--neighbors'])
+    else:
+        neighbors = input("Number of nearest neighbors: ")
+
+    neighbors = int(neighbors)
+    print("Using {} neighbors".format(neighbors))
+
     data_train, data_test, target_train, target_test = \
         train_test_split(data,
                          target,
@@ -159,8 +169,6 @@ def main():
                          train_size=0.7,
                          shuffle=True)
     
-    neighbors = 3
-
     # Test our classifier
     classifier = MyNeighborsClassifier()
 
