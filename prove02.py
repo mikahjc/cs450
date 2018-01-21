@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import time
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -26,7 +28,12 @@ def getopts(argv):
     opts = {}  # Empty dictionary to store key-value pairs.
     while argv:  # While there are arguments left to parse...
         if argv[0][0] == '-':  # Found a "-name value" pair.
-            opts[argv[0]] = argv[1]  # Add key and value to the dictionary.
+            if argv[0] == '-':
+                pass
+            elif argv[0] == "-h":
+                opts[argv[0]] = ''
+            else:
+                opts[argv[0]] = argv[1]  # Add key and value to the dictionary.
         argv = argv[1:]  # Reduce the argument list by removing script name
     return opts
 
@@ -103,18 +110,17 @@ def load_csv(filename):
 
 
 def load_dataset(index):
-    print("Using ", end="")
     if index == 1:
-        print("iris dataset\n")
+        print("Using iris dataset\n")
         dataset = datasets.load_iris()
     elif index == 2:
-        print("digits dataset\n")
+        print("Using digits dataset\n")
         dataset = datasets.load_digits()
     elif index == 3:
-        print("wine dataset\n")
+        print("Using wine dataset\n")
         dataset = datasets.load_wine()
     elif index == 4:
-        print("breast cancer dataset\n")
+        print("Using breast cancer dataset\n")
         dataset = datasets.load_breast_cancer()
     else:
         print("Invalid dataset")
@@ -128,6 +134,10 @@ def main():
     if '-f' in myargs:
         print("Using provided CSV: {}".format(myargs['-f']))
         data, target = load_csv(myargs['-f'])
+    elif '-h' in myargs or '--help' in myargs:
+        print("Usage: python prove02.py [-h|--help] [-f filename]" +
+              " [-d|--dataset <1-4>]")
+        exit()
     else:
         if '--dataset' in myargs:
             dataset = load_dataset(int(myargs['--dataset']))
@@ -135,7 +145,7 @@ def main():
             dataset = load_dataset(int(myargs['-d']))
         else:
             print("Select dataset:\n\t1. Iris\n\t2. Digits")
-            selection = input("\t3. Wine\n\t4. Breast Cancer\n\n>>")
+            selection = input("\t3. Wine\n\t4. Breast Cancer\n>> ")
             selection = int(selection)
             dataset = load_dataset(selection)
 
