@@ -189,8 +189,7 @@ def main():
         scoring = None
     elif selection == 3:
         classifier = linear_model.LinearRegression()
-        scoring = "neg_mean_squared_error"
-        scores = cross_val_score(classifier, data, target, cv=10, scoring=scoring)
+        scores = cross_val_score(classifier, data, target, cv=10)
 
     print("Accuracy: {:.2f} (+/- {:.2f})".format(scores.mean(), scores.std() * 2))
 

@@ -5,6 +5,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from numpy import genfromtxt
+from sklearn.datasets import load_iris
 import numpy as np
 import pandas as pd
 import pprint
@@ -13,9 +14,9 @@ import pprint
 class Dataset:
     def __init__(self, dataset):
         if type(dataset) is not pd.DataFrame:
-            raise("Dataset initializer was not pandas DataFrame")
+            raise TypeError("Dataset initializer was not pandas DataFrame")
         if "target" not in list(dataset):
-            raise("Dataset initializer did not contain target column")
+            raise KeyError("Dataset initializer did not contain target column")
         self.dataset = dataset
 
     @property
