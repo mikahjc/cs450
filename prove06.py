@@ -182,7 +182,7 @@ class PerceptronModel:
             if _i > 2:
                 if bestScore > accuracyHistory[-1]:
                     backup = copy.deepcopy(self.perceptron)
-            if accuracyHistory[-1] > stopTrainingAt:
+            if accuracyHistory[-1] >= stopTrainingAt:
                 print("\nTarget accuracy reached")
                 break
 
@@ -284,8 +284,8 @@ def load_pima():
 def main():
     # Constants for easy customization
     irisStop = 80
-    irisHidden = 1
-    irisNodes = 2
+    irisHidden = 2
+    irisNodes = (3, 4)
     irisRate = 0.1
     irisPatience = 250
     irisPThreshold = 0.1
@@ -338,8 +338,8 @@ def main():
     data_train, data_test, target_train, target_test = \
         train_test_split(pima_data,
                          pima_target,
-                         test_size=0.3,
-                         train_size=0.7,
+                         test_size=0.7,
+                         train_size=0.3,
                          shuffle=True)
 
     scaler2 = MinMaxScaler()
