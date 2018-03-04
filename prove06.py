@@ -149,6 +149,7 @@ class PerceptronModel:
             biasValue=-1,
             learningRate=0.1,
             patience=250,
+            pThreshold=0.1,
             maxIterations=1000,
             stopTrainingAt=95):
         self.learningRate = learningRate
@@ -163,7 +164,7 @@ class PerceptronModel:
         for _i in range(maxIterations):
             score = accuracy_score(trainingTargets, self.predict(trainingData))
             accuracyHistory.append(score*100)
-            sys.stdout.write("\rTraining iteration {} - Accuracy: {:.1f}".format(_i, score*100))
+            sys.stdout.write("\rTraining iteration {} - Accuracy: {:.1f}%".format(_i, score*100))
             sys.stdout.flush()
             bestScore = 0
             backup = copy.deepcopy(self.perceptron)
@@ -175,7 +176,7 @@ class PerceptronModel:
 
             if score > bestScore:
                 bestScore = score
-            if np.std(accuracyHistory[-patience:]) < 0.1 and _i > patience:
+            if np.std(accuracyHistory[-patience:]) < pThreshold and _i > patience:
                 print("\nEnding early due to no learning progress")
                 break
             if _i > 2:
@@ -185,14 +186,9 @@ class PerceptronModel:
                 print("\nTarget accuracy reached")
                 break
 
-        lastPerceptron = copy.deepcopy(self.perceptron)
-        self.perceptron = backup
-        score = accuracy_score(trainingTargets, self.predict(trainingData))
-        if accuracyHistory[-1] < score:
+        if accuracyHistory[-1] < bestScore:
             print("Backup model was better than last perceptron, restoring...")
             self.perceptron = backup
-        else:
-            self.perceptron = lastPerceptron
         return accuracyHistory
 
     def __repr__(self):
@@ -287,16 +283,19 @@ def load_pima():
 
 def main():
     # Constants for easy customization
-    irisStop = 90
-    irisHidden = 2
-    irisNodes = (4, 3)
+    irisStop = 80
+    irisHidden = 1
+    irisNodes = 2
     irisRate = 0.1
     irisPatience = 250
+    irisPThreshold = 0.1
+
     pimaStop = 80
     pimaHidden = 1
-    pimaNodes = 7
+    pimaNodes = 2
     pimaRate = 0.2
     pimaPatience = 50
+    pimaPThreshold = 0.5
 
     iris = load_iris()
 
@@ -320,6 +319,7 @@ def main():
                             learningRate=irisRate,
                             outputNodes=3,
                             patience=irisPatience,
+                            pThreshold=irisPThreshold,
                             stopTrainingAt=irisStop)
 
     score = accuracy_score(target_test, model.predict(data_test))
@@ -355,6 +355,7 @@ def main():
                              outputNodes=2,
                              learningRate=pimaRate,
                              patience=pimaPatience,
+                             pThreshold=pimaPThreshold,
                              stopTrainingAt=pimaStop)
 
     score = accuracy_score(target_test, model2.predict(data_test))
